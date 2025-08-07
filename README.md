@@ -1,16 +1,12 @@
-# depi_task
+# 📱 Flutter DEPI Tasks
 
-A new Flutter project.
+This repository contains all the hands-on tasks, mini-projects, and exercises I'm working on as part of my Flutter development DEPI .
 
-## Getting Started
+## 🚀 Purpose
 
-This project is a starting point for a Flutter application.
+The main goal of this repo is to:
+- Apply Flutter concepts through real examples.
+- Practice UI building, state management, and API integration.
+- Track my learning progress and project history.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+..to be continued.

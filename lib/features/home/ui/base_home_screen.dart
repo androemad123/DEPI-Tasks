@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../chat/ui/chat_list_screen.dart';
+import '../../drag and drop/widgets/draggable_screen.dart';
 import '../../settings/ui/settings_screen.dart';
 import '../../stories/ui/stories_screen.dart';
 
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ChatListScreen(),
     StoriesScreen(),
     InstagramHomePage(),
+    DraggableScreen()
   ];
 
   void _onTabTapped(int index) {
@@ -48,6 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu),
             label: 'Menu',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.drag_indicator),
+            label: 'Drag',
           ),
         ],
       ),

@@ -1,6 +1,8 @@
-import 'package:depi_task/features/settings/ui/widgets/comments_screen.dart';
+import 'package:depi_task/features/instagram/ui/widgets/comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../user home/instagram_home_page.dart';
 
 class InstagramHomePage extends StatefulWidget {
   const InstagramHomePage({super.key});
@@ -62,7 +64,14 @@ class _InstagramHomePageState extends State<InstagramHomePage> {
         elevation: 0.0,
         scrolledUnderElevation: 0.0,
         actions: [
-          IconButton(icon: const Icon(Icons.add_box_outlined), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.add_box_outlined), onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InstagramUserProfilePage(),
+        ),
+      );
+    }),
           IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
           IconButton(icon: const Icon(Icons.send_outlined), onPressed: () {}),
         ],

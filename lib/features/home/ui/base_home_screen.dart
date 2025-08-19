@@ -1,59 +1,111 @@
 import 'package:flutter/material.dart';
+import 'dart:ui'; // for ImageFilter
 
-import '../../chat/ui/chat_list_screen.dart';
+import '../../buttons/ui/stories_screen.dart';
 import '../../drag and drop/widgets/draggable_screen.dart';
-import '../../settings/ui/settings_screen.dart';
-import '../../stories/ui/stories_screen.dart';
+import '../../facebook/ui/chat_list_screen.dart';
+import '../../facebook/ui/facebook_home_base_screen.dart';
+import '../../instagram/ui/instagram_home_page.dart';
 
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _screens = const [
-    ChatListScreen(),
-    StoriesScreen(),
-    InstagramHomePage(),
-    DraggableScreen()
+  final List<Map<String, dynamic>> _tasks = const [
+    {
+      'title': 'Facebook',
+      'icon': Icons.facebook_outlined,
+      'screen': FacebookHomeBaseScreen(),
+    },
+    {
+      'title': 'buttons',
+      'icon': Icons.smart_button_rounded,
+      'screen': buttons(),
+    },
+    {
+      'title': 'Instagram',
+      'icon': Icons.install_mobile,
+      'screen': InstagramHomePage(),
+    },
+    {
+      'title': 'Drag & Drop',
+      'icon': Icons.drag_indicator,
+      'screen': DraggableScreen(),
+    },
   ];
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTabTapped,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message_rounded),
-            label: 'Chats',
+      appBar: AppBar(
+        title: const Text('My Flutter Tasks'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true, // so background goes behind AppBar
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            'assets/images/bg.png', // your background image path
+            fit: BoxFit.cover,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.my_library_books_rounded),
-            label: 'Stories',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.drag_indicator),
-            label: 'Drag',
+
+          // Foreground content
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                childAspectRatio: 1.5,
+              ),
+              itemCount: _tasks.length,
+              itemBuilder: (context, index) {
+                final task = _tasks[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => task['screen'],
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16.0),
+
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(task['icon'], color: Colors.white, size: 32),
+                            const SizedBox(height: 8),
+                            Text(
+                              task['title'],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

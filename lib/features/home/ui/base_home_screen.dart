@@ -6,6 +6,8 @@ import '../../drag and drop/widgets/draggable_screen.dart';
 import '../../facebook/ui/chat_list_screen.dart';
 import '../../facebook/ui/facebook_home_base_screen.dart';
 import '../../instagram/ui/instagram_home_page.dart';
+import '../../notes/ui/notes_screen.dart';
+import '../../to do list/ui/todo_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,6 +33,17 @@ class HomeScreen extends StatelessWidget {
       'icon': Icons.drag_indicator,
       'screen': DraggableScreen(),
     },
+    {
+      'title': 'ToDo List',
+      'icon': Icons.list_alt_rounded,
+      'screen': TodoScreen(),
+    },
+    {
+      'title': 'Notes with bloc',
+      'icon': Icons.edit_note,
+      'screen': NotesScreen(),
+    },
+
   ];
 
   @override

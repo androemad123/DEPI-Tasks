@@ -16,35 +16,24 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
-  bool _isDragging = false;
-  int? _draggedIndex;
-
-  // 🎨 generate a random pastel color for note background
-  Color _randomNoteColor() {
-    final random = Random();
-    final baseColors = [
-      Colors.pink.shade100,
-      Colors.blue.shade100,
-      Colors.green.shade100,
-      Colors.orange.shade100,
-      Colors.purple.shade100,
-      Colors.teal.shade100,
-      Colors.yellow.shade100,
-    ];
-    return baseColors[random.nextInt(baseColors.length)];
+  @override
+  void initState() {
+    super.initState();
+    context.read<NoteBloc>().add(LoadNotes());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cozy Notes"),
-        centerTitle: true,
-      ),
-      body: Stack(
-        children: [
-          // 📌 Notes Grid takes FULL width
-          BlocBuilder<NoteBloc, NoteState>(
+    return Stack(
+      children: [
+        Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+          appBar: AppBar(
+            title: const Text("Cozy Notes"),
+            centerTitle: true,
+          ),
+          body: BlocBuilder<NoteBloc, NoteState>(
             builder: (context, state) {
               if (state.notes.isEmpty) {
                 return const Center(child: Text("No notes yet. Add some!"));
@@ -66,84 +55,86 @@ class _NotesScreenState extends State<NotesScreen> {
                     feedback: Material(
                       color: Colors.transparent,
                       child: SizedBox(
-                        width: 200, // same as grid card
+                        width: 200,
                         height: 200,
-                        child: _buildNoteCard(note, _randomNoteColor()),
+                        child: _buildNoteCard(note),
                       ),
                     ),
                     childWhenDragging: Opacity(
                       opacity: 0.5,
-                      child: _buildNoteCard(note, _randomNoteColor()),
+                      child: _buildNoteCard(note),
                     ),
-                    child: _buildNoteCard(note, _randomNoteColor()),
+                    child: _buildNoteCard(note),
                   );
                 },
               );
             },
           ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              _showAddNoteBottomSheet(context);
+            },
+          ),
+        ),
 
-          // 📌 Right-side Delete Zone (overlay)
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: DragTarget<int>(
-              builder: (context, candidateData, rejectedData) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    decoration: BoxDecoration(
-                      gradient: candidateData.isNotEmpty
-                          ? LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.red.withOpacity(0.01),
-                          Colors.red.withOpacity(0.4),
-                        ],
-                      )
-                          : null,
-
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.delete_forever,
-                        size: 50,
-                        color: candidateData.isNotEmpty
-                            ? Colors.white.withOpacity(0.9)
-                            : Colors.transparent,
+        // 📌 Delete Zone overlay that covers EVERYTHING (including AppBar)
+        Positioned.fill(
+          child: IgnorePointer(
+            ignoring: false,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: DragTarget<int>(
+                builder: (context, candidateData, rejectedData) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        gradient: candidateData.isNotEmpty
+                            ? LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  Colors.red.withOpacity(0.01),
+                                  Colors.red.withOpacity(0.4),
+                                ],
+                              )
+                            : null,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.delete_forever,
+                          size: 50,
+                          color: candidateData.isNotEmpty
+                              ? Colors.white.withOpacity(0.9)
+                              : Colors.transparent,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-              onWillAccept: (data) => data != null,
-              onAccept: (index) {
-                context.read<NoteBloc>().add(RemoveNote(index));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Note deleted")),
-                );
-              },
+                  );
+                },
+                onWillAccept: (data) => data != null,
+                onAccept: (index) {
+                  context.read<NoteBloc>().add(RemoveNote(index));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Note deleted")),
+                  );
+                },
+              ),
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          _showAddNoteBottomSheet(context);
-        },
-      ),
+        ),
+      ],
     );
   }
 
   // 📌 Note Card UI
-  Widget _buildNoteCard(Note note, Color color) {
+  Widget _buildNoteCard(Note note) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color,
+        color: note.color,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -245,15 +236,13 @@ class _NotesScreenState extends State<NotesScreen> {
                   if (titleController.text.isNotEmpty &&
                       contentController.text.isNotEmpty &&
                       categoryController.text.isNotEmpty) {
-                    final note = Note(
-                      title: titleController.text,
-                      content: contentController.text,
-                      category: categoryController.text,
-                      createdAt: DateTime.now(),
-                    );
                     context.read<NoteBloc>().add(
-                      AddNote(note.title, note.content, note.category),
-                    );
+                          AddNote(
+                            titleController.text,
+                            contentController.text,
+                            categoryController.text,
+                          ),
+                        );
                     Navigator.pop(context);
                   }
                 },

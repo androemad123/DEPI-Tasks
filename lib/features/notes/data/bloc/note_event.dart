@@ -1,5 +1,7 @@
 abstract class NoteEvent {}
 
+class LoadNotes extends NoteEvent {}
+
 class AddNote extends NoteEvent {
   final String title;
   final String description;

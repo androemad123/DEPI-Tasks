@@ -7,6 +7,8 @@ import '../../facebook/ui/chat_list_screen.dart';
 import '../../facebook/ui/facebook_home_base_screen.dart';
 import '../../instagram/ui/instagram_home_page.dart';
 import '../../notes/ui/notes_screen.dart';
+import '../../sign up -in/login_screen.dart';
+import '../../testing notifications/notifications_screen.dart';
 import '../../to do list/ui/todo_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -42,6 +44,16 @@ class HomeScreen extends StatelessWidget {
       'title': 'Notes with bloc',
       'icon': Icons.edit_note,
       'screen': NotesScreen(),
+    },
+    {
+      'title': 'Login Screen',
+      'icon': Icons.login_outlined,
+      'screen': LoginScreen(),
+    },
+    {
+      'title': 'Notifications',
+      'icon': Icons.notifications_none_outlined,
+      'screen': NotificationsScreen(),
     },
 
   ];

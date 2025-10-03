@@ -1,6 +1,10 @@
 import 'package:depi_task/features/facebook/ui/chat_list_screen.dart';
+import 'package:depi_task/features/facebook/ui/setting_screen_facebook.dart';
 import 'package:depi_task/features/facebook/ui/userProfile/facebook_user_profile_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../../sign up -in/auth/auth_service.dart';
+import '../../sign up -in/login_screen.dart';
 
 class FacebookHomeBaseScreen extends StatefulWidget {
   const FacebookHomeBaseScreen({super.key});
@@ -12,12 +16,12 @@ class FacebookHomeBaseScreen extends StatefulWidget {
 class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     Center(child: Text("Home Screen")),
     ChatListScreen(),
-    Center(child: Text("Settings Screen")),
-    Center(child: Text("Stories Screen")),
     FacebookUserProfileScreen(),
+    Center(child: Text("Stories Screen")),
+    SettingScreenFacebook()
   ];
 
   void _onIconTapped(int index) {
@@ -33,7 +37,8 @@ class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.white,
-        automaticallyImplyLeading: false, // removes back button
+        automaticallyImplyLeading: false,
+        // removes back button
         actions: [
           const Spacer(),
           _buildAnimatedIcon(
@@ -49,7 +54,7 @@ class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
           ),
           const Spacer(),
           _buildAnimatedIcon(
-            icon: Icons.settings,
+            icon: Icons.person,
             index: 2,
             tooltip: "Settings",
           ),
@@ -61,7 +66,7 @@ class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
           ),
           const Spacer(),
           _buildAnimatedIcon(
-            icon: Icons.person,
+            icon: Icons.settings,
             index: 4,
             tooltip: "Profile",
           ),
@@ -73,8 +78,8 @@ class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
         children: _pages,
       ),
     );
-
   }
+
   Widget _buildAnimatedIcon({
     required IconData icon,
     required int index,
@@ -102,5 +107,4 @@ class _FacebookHomeBaseScreenState extends State<FacebookHomeBaseScreen> {
       },
     );
   }
-
 }
